@@ -1,0 +1,57 @@
+<table class="table">
+  <thead>
+    <th class="text-center">Tarefa</th>
+    <th class="text-center">Horário</th>
+    <th class="text-right">Ações</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let todo of todolista">
+      <td class="text-center" *ngIf="todo.descricao || todo.horario" [ngStyle]="{'text-decoration' : todo.finalizada ? 'line-through' : '','color': (todo.finalizada || !todo.descricao) ? '#ccc' : '' }" >
+          {{todo.descricao}}
+          <span *ngIf="!todo.descricao">- vazio -</span>
+      </td>
+      <td class="text-center" *ngIf="todo.horario || todo.descricao" [ngStyle]="{'text-decoration' : (todo.finalizada && todo.horario) ? 'line-through' : '','color': (todo.finalizada || !todo.horario) ? '#ccc' : '' }" >
+        {{todo.horario}}
+        <span *ngIf="!todo.horario">- vazio -</span>
+      </td>
+
+      <td class="text-right" *ngIf="todo.horario || todo.descricao"> 
+        <a class="btn" *ngIf="(todo.descricao || todo.horario) && !todo.finalizada " id="{{todo.id}}" (click)="atualizar(todo)"><i class="fas fa-check close"></i></a>
+        <a class="btn " (click)="excluir(todo)"><i class="fa fa-trash-alt trash" aria-hidden="true"> </i> </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+ <!-- Modal -->
+ <div class="modal fade" id="modalNovaTarefa" tabindex="-1" role="dialog" aria-labelledby="modalNovaTarefaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Nova Tarefa</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="mensagem" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong> {{mensagem}}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form method="post" (ngSubmit)="criar()" [formGroup]="formulario">
+            <label class="mb-0">Tarefa:</label>
+            <input type="text" name="descricao" class="form-control  mt-0 mb-2" formControlName="descricao"/>
+
+            <label class="mb-0">Horário:</label>
+            <input type='time' name="horario" class="form-control mt-0" formControlName="horario"/>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" type="submit" [disabled]="formulario.invalid">Salvar</button>
+              <button type="button" class="btn btn-default" (click)="listar(); mensagem=''" id="close-modal" data-dismiss="modal">Fechar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
