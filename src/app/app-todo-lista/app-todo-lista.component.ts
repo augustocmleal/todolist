@@ -9,7 +9,7 @@ import { TodoService } from '../todo.service';
   styleUrls: ['./app-todo-lista.component.css']
 })
 export class AppTodoListaComponent implements OnInit {
-
+  formShow = false;
   todolista = [];
   formulario: FormGroup;
   mensagem = "";
@@ -36,16 +36,36 @@ export class AppTodoListaComponent implements OnInit {
   criar(){
     this.todoService.criar(this.formulario.value).subscribe(resposta => this.todolista.push(resposta));
     this.formulario.reset();
+    this.exibeFormulario();
     this.mensagem = 'Tarefa armazenada com sucesso';
+    setTimeout (() => {
+      this.mensagem = '';
+      this.listar();
+   }, 3000);
   }
 
   excluir(todo: any){
-    this.todoService.excluir(todo).subscribe(resposta => this.listar());
+    this.todoService.excluir(todo).subscribe((res) => {
+    });
+    this.mensagem = 'Tarefa "'+todo.descricao+'" excluida com sucesso';
+    setTimeout (() => {
+      this.mensagem = '';
+      this.listar();
+    }, 3000);
+    
   }
 
   atualizar(todo: any){
     this.todoService.atualizar(todo).subscribe(resposta => this.listar());
 
+  }
+
+  exibeFormulario(){
+    if(this.formShow === true){
+      this.formShow = false;
+    } else {
+      this.formShow = true;
+    }
   }
 
 }
